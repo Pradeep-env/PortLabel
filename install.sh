@@ -131,11 +131,28 @@ else
 fi
 
 # ============================================================
-#  STEP 4 — Install portlabel command
+#  STEP 4 — Install fallback page
 # ============================================================
 
 echo ""
-echo -e "  ${BOLD}Step 4: Portlabel command${RESET}"
+echo -e "  ${BOLD}Step 4: Fallback page${RESET}"
+
+FALLBACK_DIR="/etc/caddy/portlabel-fallback"
+mkdir -p "$FALLBACK_DIR"
+
+if [[ -f "fallback.html" ]]; then
+    cp fallback.html "$FALLBACK_DIR/fallback.html"
+    print_success "Installed fallback page to $FALLBACK_DIR"
+else
+    print_warn "fallback.html not found — skipping. Service-offline page will not show."
+fi
+
+# ============================================================
+#  STEP 5 — Install portlabel command
+# ============================================================
+
+echo ""
+echo -e "  ${BOLD}Step 5: Portlabel command${RESET}"
 
 cp portlabel.sh /usr/local/bin/portlabel
 chmod +x /usr/local/bin/portlabel
