@@ -105,6 +105,12 @@ else
     print_info "No portlabel.caddy file found — skipping"
 fi
 
+# Remove fallback page directory
+if [[ -d "/etc/caddy/portlabel-fallback" ]]; then
+    rm -rf "/etc/caddy/portlabel-fallback"
+    print_success "Removed /etc/caddy/portlabel-fallback"
+fi
+
 # Always remove the import line from Caddyfile
 if grep -q "import portlabel.caddy" "$CADDYFILE" 2>/dev/null; then
     tmp=$(mktemp)
