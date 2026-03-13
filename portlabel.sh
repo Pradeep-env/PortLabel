@@ -12,6 +12,7 @@ CONF_FILE="$CONF_DIR/domains.conf"
 HOSTS_FILE="/etc/hosts"
 HOSTS_MARKER_START="# portlabel-start — do not edit manually"
 HOSTS_MARKER_END="# portlabel-end"
+CADDY_CONF="/etc/caddy/portlabel.caddy"
 
 # --- Colors ---
 RED='\033[0;31m'
@@ -106,6 +107,38 @@ sync_hosts() {
 }
 
 # ============================================================
+#  CADDY MANAGEMENT
+# ============================================================
+
+# Rebuild /etc/caddy/portlabel.caddy from conf file
+sync_caddy() {
+    local tmp
+    tmp=$(mktemp)
+
+    while IFS='|' read -r name port status; do
+        [[ -z "$name" ]] && continue
+        if [[ "$status" == "enabled" ]]; then
+            echo "${name}.local {" >> "$tmp"
+            echo "    reverse_proxy localhost:${port}" >> "$tmp"
+            echo "}" >> "$tmp"
+            echo "" >> "$tmp"
+        fi
+    done < "$CONF_FILE"
+
+    sudo cp "$tmp" "$CADDY_CONF"
+    rm -f "$tmp"
+}
+
+# Reload Caddy to apply config changes
+reload_caddy() {
+    if systemctl is-active --quiet caddy; then
+        sudo systemctl reload caddy
+    else
+        print_warn "Caddy is not running. Start it with: sudo systemctl start caddy"
+    fi
+}
+
+# ============================================================
 #  CORE OPERATIONS
 # ============================================================
 
@@ -140,6 +173,8 @@ create_domain() {
 
     echo "${name}|${port}|enabled" >> "$CONF_FILE"
     sync_hosts
+    sync_caddy
+    reload_caddy
 
     print_success "Created: ${name}.local → localhost:${port}"
     pause
@@ -204,6 +239,8 @@ modify_domain() {
     # Update in conf file
     sed -i "s/^${name}|${current_port}|/${name}|${new_port}|/" "$CONF_FILE"
     sync_hosts
+    sync_caddy
+    reload_caddy
 
     print_success "Updated: ${name}.local → localhost:${new_port}"
     pause
@@ -234,6 +271,8 @@ delete_domain() {
 
     sed -i "/^${name}|/d" "$CONF_FILE"
     sync_hosts
+    sync_caddy
+    reload_caddy
 
     print_success "Deleted: ${name}.local"
     pause
@@ -261,10 +300,14 @@ toggle_domain() {
     if [[ "$current_status" == "enabled" ]]; then
         sed -i "s/^${name}|\(.*\)|enabled$/${name}|\1|disabled/" "$CONF_FILE"
         sync_hosts
+        sync_caddy
+        reload_caddy
         print_success "${name}.local is now disabled"
     else
         sed -i "s/^${name}|\(.*\)|disabled$/${name}|\1|enabled/" "$CONF_FILE"
         sync_hosts
+        sync_caddy
+        reload_caddy
         print_success "${name}.local is now enabled"
     fi
 
