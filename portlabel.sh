@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # ============================================================
-#  Portlabel - Local Domain Manager
+#  PortLabel - Local Domain Manager
 #  Assigns .local domain names to self-hosted services
-#  https://github.com/yourusername/portlabel
+#  https://github.com/Pradeep-env/PortLabel.git
 # ============================================================
 
 # --- Config paths ---
