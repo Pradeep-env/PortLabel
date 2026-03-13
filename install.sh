@@ -86,6 +86,24 @@ CADDYFILE="/etc/caddy/Caddyfile"
 touch "$CADDY_CONF"
 print_success "Created $CADDY_CONF"
 
+# Disable the default Caddy catch-all :80 block
+# It intercepts all traffic and serves Caddy's hello page,
+# overriding portlabel's named .local blocks
+if grep -q "^:80" "$CADDYFILE" 2>/dev/null; then
+    tmp=$(mktemp)
+    awk '
+        /^:80[[:space:]]*\{/ { skip=1; print "# [disabled by portlabel installer] " $0; next }
+        skip && /^\}/ { skip=0; print "# [disabled by portlabel installer] " $0; next }
+        skip { print "# [disabled by portlabel installer] " $0; next }
+        { print }
+    ' "$CADDYFILE" > "$tmp"
+    cp "$tmp" "$CADDYFILE"
+    rm -f "$tmp"
+    print_success "Disabled default :80 catch-all block in $CADDYFILE"
+else
+    print_success "No default :80 block found — nothing to disable"
+fi
+
 # Tell Caddy's main Caddyfile to import the portlabel config
 if ! grep -q "import portlabel.caddy" "$CADDYFILE" 2>/dev/null; then
     echo "" >> "$CADDYFILE"
