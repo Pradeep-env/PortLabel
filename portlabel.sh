@@ -119,7 +119,15 @@ sync_caddy() {
         [[ -z "$name" ]] && continue
         if [[ "$status" == "enabled" ]]; then
             echo "${name}.local {" >> "$tmp"
-            echo "    reverse_proxy localhost:${port}" >> "$tmp"
+            echo "    tls internal" >> "$tmp"
+            echo "    reverse_proxy localhost:${port} {" >> "$tmp"
+            echo "        health_uri /" >> "$tmp"
+            echo "    }" >> "$tmp"
+            echo "    handle_errors 502 503 {" >> "$tmp"
+            echo "        root * /etc/caddy/portlabel-fallback" >> "$tmp"
+            echo "        rewrite * /fallback.html" >> "$tmp"
+            echo "        file_server" >> "$tmp"
+            echo "    }" >> "$tmp"
             echo "}" >> "$tmp"
             echo "" >> "$tmp"
         fi
