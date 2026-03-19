@@ -254,6 +254,7 @@ portlabel/
 - [ ] Nginx support
 - [ ] Import existing services from a config file
 - [ ] GUI via Flask + Jinja (planned)
+- [ ] Docs
 
 ---
 
