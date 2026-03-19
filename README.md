@@ -231,6 +231,7 @@ Avoid using real domain names (like `n8n.com`) as local aliases — it would bre
 ```
 portlabel/
 ├── portlabel.sh         # Main script
+├── devmode.sh           # Developer mode — port reserve & service manager
 ├── install.sh           # Installs Portlabel and sets up Caddy
 ├── uninstall.sh         # Removes Portlabel and cleans up everything
 ├── fallback.html        # Offline page served when a service isn't running
@@ -249,9 +250,121 @@ portlabel/
 - [x] Caddy reverse proxy auto-configuration
 - [x] TLS on every domain via Caddy internal CA
 - [x] Branded offline fallback page
+- [x] Developer mode — port reserve, service generator, CORS reference
 - [ ] Nginx support
 - [ ] Import existing services from a config file
 - [ ] GUI via Flask + Jinja (planned)
+
+---
+
+## Developer Mode
+
+Portlabel includes a separate companion script — `devmode.sh` — built specifically for developers running multiple local projects simultaneously.
+
+### The Problem It Solves
+
+When you're developing a React frontend and a FastAPI backend at the same time, you're dealing with port conflicts, CORS configuration headaches, and the constant mental overhead of remembering which port belongs to which project. Devmode eliminates all of that.
+
+### How It Works
+
+Run it directly — it is not installed as a system command by design:
+
+```bash
+sudo ./devmode.sh
+```
+
+```
+Portlabel Dev — Developer Mode
+================================
+1) Create    — reserve a port and register a dev project
+2) List      — view all dev projects
+3) Toggle    — enable or disable a project
+4) Services  — start / stop / restart / logs
+5) CORS info — view domain, port and CORS snippets
+6) Delete    — remove a project and release its port
+7) Exit
+```
+
+### Port Reservation
+
+Devmode auto-assigns ports from the reserved range **30000–39999**. You never choose or remember a port number — you just name your project and get back a clean `.local` domain.
+
+```
+Project name : myapp
+Stack        : React / Vite
+Project path : /home/user/projects/myapp
+
+✔ Reserved port: 30001
+✔ Created: myapp.local → localhost:30001
+```
+
+This range is chosen deliberately — no self-hosted tool uses ports this high, so conflicts are impossible.
+
+### Service File Generator
+
+Devmode generates a systemd service file for your project so it starts automatically and can be managed like any system service. Supported stacks:
+
+| Stack | Start command in service |
+|---|---|
+| React / Vite | `npm run dev -- --port PORT` |
+| Next.js | `PORT=PORT npm run dev` |
+| Flask | `python -m flask run --port PORT` |
+| FastAPI | `uvicorn main:app --port PORT --reload` |
+| Spring Boot | `java -jar app.jar --server.port=PORT` |
+| Static HTML | `caddy file-server --listen :PORT` |
+
+The service file is placed at `/etc/systemd/system/portlabel-name.service` and enabled on startup automatically.
+
+Manage it anytime through the Services menu or directly:
+
+```bash
+sudo systemctl start   portlabel-myapp
+sudo systemctl stop    portlabel-myapp
+sudo systemctl restart portlabel-myapp
+sudo journalctl -u portlabel-myapp -f
+```
+
+### Clean CORS — No Ports in Origins
+
+Because every project gets a `.local` domain with no port exposed, your CORS config becomes simple and clean:
+
+```python
+# FastAPI
+allow_origins=["https://myapp.local"]
+```
+
+```javascript
+// Express
+cors({ origin: "https://myapp.local" })
+```
+
+```java
+// Spring Boot
+@CrossOrigin(origins = "https://myapp.local")
+```
+
+No more `allow: *` as a workaround. No ports in origins. Works exactly like a production CORS config.
+
+### API Calls from Frontend
+
+Your frontend calls the backend by domain, no port needed:
+
+```javascript
+fetch("https://myapi.local/login")
+fetch("https://myapi.local/users")
+```
+
+### Developer Tab on the Fallback Page
+
+When a dev service is offline, the fallback page shows a **Developer** tab with:
+- The systemctl command to start that specific service
+- The journalctl command to tail its logs
+- CORS snippets for FastAPI, Express, and Spring Boot — pre-filled with the actual domain
+- The API base URL ready to copy
+
+### Data Storage
+
+Dev projects are stored in `~/.portlabel/dev.conf` alongside the main `domains.conf`. Dev domains also appear in the main Portlabel list with a `[dev]` tag so you always have one place to see all registered ports.
 
 ---
 
@@ -263,6 +376,7 @@ Guidelines:
 - Shell script only for the core tool — keep it dependency-free
 - Hosts file edits must stay scoped to the `portlabel-start / portlabel-end` block
 - Caddy config changes must not break the fallback page behavior
+- Devmode changes must not affect the main portlabel.sh behavior
 - Open an issue before major changes
 
 ---

@@ -4,7 +4,7 @@
 #  Portlabel Dev — Developer Port Reserve & Service Manager
 #  Companion script to Portlabel
 #  Run: sudo ./devmode.sh
-#  https://github.com/yourusername/portlabel
+#  https://github.com/Pradeep-env/PortLabel
 # ============================================================
 
 # --- Shared config paths (must match portlabel.sh) ---
