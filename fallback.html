@@ -13,6 +13,9 @@
       --border:    #1e2229;
       --accent:    #00e5a0;
       --accent2:   #0066ff;
+      --dev:       #a855f7;
+      --dev-dim:   rgba(168,85,247,0.12);
+      --dev-border:rgba(168,85,247,0.25);
       --muted:     #3a3f4a;
       --text:      #e8eaf0;
       --text-dim:  #6b7280;
@@ -35,7 +38,6 @@
       overflow-x: hidden;
     }
 
-    /* Grid background */
     body::before {
       content: '';
       position: fixed;
@@ -49,7 +51,6 @@
       z-index: 0;
     }
 
-    /* Glow blob */
     body::after {
       content: '';
       position: fixed;
@@ -67,10 +68,10 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 680px;
+      max-width: 700px;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1.5rem;
     }
 
     /* ── Header ── */
@@ -82,17 +83,12 @@
     }
 
     .logo-mark {
-      width: 42px;
-      height: 42px;
+      width: 42px; height: 42px;
       border: 1.5px solid var(--accent);
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; flex-shrink: 0;
     }
-
     .logo-mark::before {
       content: '';
       position: absolute;
@@ -100,258 +96,237 @@
       border: 1px solid rgba(0,229,160,0.3);
       border-radius: 4px;
     }
-
     .logo-mark svg {
-      width: 18px;
-      height: 18px;
-      stroke: var(--accent);
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
+      width: 18px; height: 18px;
+      stroke: var(--accent); fill: none;
+      stroke-width: 2; stroke-linecap: round;
     }
 
     .brand {
       font-family: var(--sans);
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: var(--text);
+      font-size: 1.1rem; font-weight: 800;
+      letter-spacing: 0.05em; color: var(--text);
     }
-
-    .brand span {
-      color: var(--accent);
-    }
+    .brand span { color: var(--accent); }
 
     .version {
-      font-size: 0.65rem;
-      color: var(--text-dim);
+      font-size: 0.65rem; color: var(--text-dim);
       border: 1px solid var(--border);
-      padding: 2px 7px;
-      border-radius: 20px;
-      margin-left: auto;
-      letter-spacing: 0.08em;
+      padding: 2px 7px; border-radius: 20px;
+      margin-left: auto; letter-spacing: 0.08em;
     }
 
     /* ── Status card ── */
     .status-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
+      border-radius: 12px; padding: 2rem;
       animation: fadeUp 0.5s 0.1s ease both;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
-
     .status-card::before {
       content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
       opacity: 0.6;
     }
 
     .status-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      display: flex; align-items: center; gap: 0.75rem;
       margin-bottom: 1.25rem;
     }
-
     .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
       background: #ff4444;
       box-shadow: 0 0 8px rgba(255,68,68,0.6);
-      animation: pulse-red 2s infinite;
-      flex-shrink: 0;
+      animation: pulse-red 2s infinite; flex-shrink: 0;
     }
-
     @keyframes pulse-red {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
     }
-
     .status-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      color: var(--text-dim);
-      text-transform: uppercase;
+      font-size: 0.7rem; letter-spacing: 0.12em;
+      color: var(--text-dim); text-transform: uppercase;
     }
-
     .domain-display {
       font-family: var(--sans);
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1.1;
-      margin-bottom: 0.5rem;
-      word-break: break-all;
+      font-size: 2rem; font-weight: 800;
+      color: var(--text); line-height: 1.1;
+      margin-bottom: 0.5rem; word-break: break-all;
     }
-
-    .domain-display .tld {
-      color: var(--accent);
-    }
-
+    .domain-display .tld { color: var(--accent); }
     .status-message {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      line-height: 1.6;
+      font-size: 0.8rem; color: var(--text-dim); line-height: 1.6;
     }
-
     .meta-row {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
+      display: flex; gap: 1.5rem;
+      margin-top: 1.5rem; padding-top: 1.5rem;
       border-top: 1px solid var(--border);
     }
-
-    .meta-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
+    .meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
     .meta-key {
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      font-size: 0.65rem; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.1em;
     }
+    .meta-val { font-size: 0.8rem; color: var(--accent); }
 
-    .meta-val {
-      font-size: 0.8rem;
-      color: var(--accent);
-    }
-
-    /* ── Instructions ── */
-    .instructions {
+    /* ── Tabs ── */
+    .tabs-wrapper {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
+      border-radius: 12px; overflow: hidden;
       animation: fadeUp 0.5s 0.2s ease both;
     }
 
-    .instructions-header {
-      padding: 1rem 1.5rem;
+    .tabs-nav {
+      display: flex;
       border-bottom: 1px solid var(--border);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.85rem 1rem;
+      background: none; border: none;
+      font-family: var(--mono);
+      font-size: 0.7rem; letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--text-dim);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+      border-right: 1px solid var(--border);
+      position: relative;
     }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn:hover { background: rgba(255,255,255,0.02); color: var(--text); }
 
-    .instructions-header::before {
-      content: '//';
+    .tab-btn.active {
       color: var(--accent);
-      font-weight: 600;
+      background: rgba(0,229,160,0.04);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+      background: var(--accent);
     }
 
+    .tab-btn.dev-tab.active {
+      color: var(--dev);
+      background: var(--dev-dim);
+    }
+    .tab-btn.dev-tab.active::after { background: var(--dev); }
+    .tab-btn.dev-tab:hover { color: var(--dev); }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Steps (shared) ── */
     .step {
-      display: flex;
-      gap: 1rem;
+      display: flex; gap: 1rem;
       padding: 1rem 1.5rem;
       border-bottom: 1px solid var(--border);
       transition: background 0.15s;
     }
-
     .step:last-child { border-bottom: none; }
     .step:hover { background: rgba(255,255,255,0.02); }
 
     .step-num {
-      font-size: 0.65rem;
-      color: var(--accent);
-      font-weight: 700;
-      width: 18px;
-      flex-shrink: 0;
-      padding-top: 2px;
+      font-size: 0.65rem; color: var(--accent);
+      font-weight: 700; width: 18px; flex-shrink: 0; padding-top: 2px;
     }
+    .dev-tab-pane .step-num { color: var(--dev); }
 
-    .step-body {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .step-title {
-      font-size: 0.8rem;
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .step-desc {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
+    .step-body { display: flex; flex-direction: column; gap: 0.35rem; }
+    .step-title { font-size: 0.8rem; color: var(--text); font-weight: 600; }
+    .step-desc  { font-size: 0.72rem; color: var(--text-dim); line-height: 1.5; }
 
     .cmd {
       display: inline-block;
       background: rgba(0,229,160,0.08);
       border: 1px solid rgba(0,229,160,0.2);
       color: var(--accent);
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      margin-top: 0.25rem;
-      cursor: pointer;
-      transition: background 0.15s;
+      padding: 3px 8px; border-radius: 4px;
+      font-size: 0.72rem; margin-top: 0.25rem;
+      cursor: pointer; transition: background 0.15s;
       position: relative;
     }
-
-    .cmd:hover {
-      background: rgba(0,229,160,0.15);
+    .cmd:hover { background: rgba(0,229,160,0.15); }
+    .cmd.dev {
+      background: var(--dev-dim);
+      border-color: var(--dev-border);
+      color: var(--dev);
     }
+    .cmd.dev:hover { background: rgba(168,85,247,0.2); }
 
     .cmd.copied::after {
       content: 'copied!';
-      position: absolute;
-      right: -52px;
-      top: 50%;
+      position: absolute; right: -52px; top: 50%;
       transform: translateY(-50%);
-      font-size: 0.65rem;
-      color: var(--accent);
-      opacity: 1;
+      font-size: 0.65rem; color: var(--accent);
       animation: fadeOut 1.2s forwards;
     }
+    .cmd.dev.copied::after { color: var(--dev); }
 
     @keyframes fadeOut {
-      0% { opacity: 1; }
-      70% { opacity: 1; }
-      100% { opacity: 0; }
+      0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; }
+    }
+
+    /* ── Dev section specific ── */
+    .cors-block {
+      margin: 0.5rem 0 0;
+      background: rgba(168,85,247,0.05);
+      border: 1px solid var(--dev-border);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+    }
+
+    .cors-block .lang {
+      font-size: 0.6rem;
+      color: var(--dev);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .cors-block code {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      display: block;
+    }
+
+    .cors-block code .hl { color: var(--text); }
+    .cors-block code .kw { color: var(--dev); }
+    .cors-block code .str { color: var(--accent); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: var(--dev-dim);
+      border: 1px solid var(--dev-border);
+      color: var(--dev);
+      letter-spacing: 0.06em;
+      margin-left: 0.4rem;
+      vertical-align: middle;
     }
 
     /* ── Footer ── */
     .footer {
-      text-align: center;
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 0.08em;
+      text-align: center; font-size: 0.65rem;
+      color: var(--muted); letter-spacing: 0.08em;
       animation: fadeUp 0.5s 0.3s ease both;
     }
-
     .footer a {
-      color: var(--text-dim);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-      transition: color 0.15s;
+      color: var(--text-dim); text-decoration: none;
+      border-bottom: 1px solid var(--border); transition: color 0.15s;
     }
-
     .footer a:hover { color: var(--accent); }
 
-    /* ── Animations ── */
     @keyframes fadeDown {
       from { opacity: 0; transform: translateY(-12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -372,7 +347,7 @@
         <circle cx="17.5" cy="17.5" r="3.5"/>
       </svg>
     </div>
-    <span class="brand">Port<span>Label</span></span>
+    <span class="brand">Port<span>label</span></span>
     <span class="version">v1.0</span>
   </div>
 
@@ -405,52 +380,136 @@
     </div>
   </div>
 
-  <!-- Instructions -->
-  <div class="instructions">
-    <div class="instructions-header">Quick reference</div>
-
-    <div class="step">
-      <span class="step-num">01</span>
-      <div class="step-body">
-        <span class="step-title">Start your service</span>
-        <span class="step-desc">Make sure the application assigned to this domain is running on its port. Portlabel doesn't manage your processes — it only handles the routing.</span>
-      </div>
+  <!-- Tabbed instructions -->
+  <div class="tabs-wrapper">
+    <div class="tabs-nav">
+      <button class="tab-btn active"     onclick="switchTab('general', this)">Quick Reference</button>
+      <button class="tab-btn dev-tab"    onclick="switchTab('dev', this)">Developer <span class="badge">devmode</span></button>
     </div>
 
-    <div class="step">
-      <span class="step-num">02</span>
-      <div class="step-body">
-        <span class="step-title">Check registered domains</span>
-        <span class="step-desc">Open Portlabel and use List to see all domains and their current status.</span>
-        <span class="cmd" onclick="copyCmd(this, 'sudo portlabel')">sudo portlabel</span>
+    <!-- General tab -->
+    <div class="tab-pane active" id="tab-general">
+
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-body">
+          <span class="step-title">Start your service</span>
+          <span class="step-desc">Make sure the application assigned to this domain is running on its port. Portlabel doesn't manage your processes — it only handles the routing.</span>
+        </div>
       </div>
+
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-body">
+          <span class="step-title">Check registered domains</span>
+          <span class="step-desc">Open Portlabel and use List to see all domains and their current status.</span>
+          <span class="cmd" onclick="copyCmd(this, 'sudo portlabel')">sudo portlabel</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-body">
+          <span class="step-title">Toggle a domain on or off</span>
+          <span class="step-desc">Use option 5 in the menu to enable or disable a domain without deleting it. Disabled domains show this page.</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">04</span>
+        <div class="step-body">
+          <span class="step-title">First visit shows a security warning</span>
+          <span class="step-desc">Portlabel uses Caddy's internal TLS. On first visit Chrome will warn you — click Advanced → Proceed. You won't see it again for this domain.</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">05</span>
+        <div class="step-body">
+          <span class="step-title">Chrome not resolving .local domains?</span>
+          <span class="step-desc">Disable Chrome's async DNS resolver to ensure it reads your hosts file correctly.</span>
+          <span class="cmd" onclick="copyCmd(this, 'chrome://flags/#enable-async-dns')">chrome://flags/#enable-async-dns</span>
+        </div>
+      </div>
+
     </div>
 
-    <div class="step">
-      <span class="step-num">03</span>
-      <div class="step-body">
-        <span class="step-title">Toggle a domain on or off</span>
-        <span class="step-desc">Use option 5 in the menu to enable or disable a domain without deleting it. Disabled domains show this page.</span>
-      </div>
-    </div>
+    <!-- Developer tab -->
+    <div class="tab-pane dev-tab-pane" id="tab-dev">
 
-    <div class="step">
-      <span class="step-num">04</span>
-      <div class="step-body">
-        <span class="step-title">First visit shows a security warning</span>
-        <span class="step-desc">Portlabel uses Caddy's internal TLS. On first visit Chrome will warn you — click Advanced → Proceed. You won't see it again for this domain.</span>
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-body">
+          <span class="step-title">Start your dev service</span>
+          <span class="step-desc">If you created a systemd service with Portlabel Dev, start it with the command below. Replace <em>name</em> with your project name.</span>
+          <span class="cmd dev" onclick="copyCmd(this, 'sudo systemctl start portlabel-name')" id="startCmd">sudo systemctl start portlabel-name</span>
+        </div>
       </div>
-    </div>
 
-    <div class="step">
-      <span class="step-num">05</span>
-      <div class="step-body">
-        <span class="step-title">Chrome not resolving .local domains?</span>
-        <span class="step-desc">Disable Chrome's async DNS resolver to ensure it reads your hosts file correctly.</span>
-        <span class="cmd" onclick="copyCmd(this, 'chrome://flags/#enable-async-dns')">chrome://flags/#enable-async-dns</span>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-body">
+          <span class="step-title">View service logs</span>
+          <span class="step-desc">Check what your service is outputting — useful when the port is up but the app isn't responding correctly.</span>
+          <span class="cmd dev" onclick="copyCmd(this, 'sudo journalctl -u portlabel-name -f')" id="logCmd">sudo journalctl -u portlabel-name -f</span>
+        </div>
       </div>
-    </div>
 
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-body">
+          <span class="step-title">CORS — allow origin</span>
+          <span class="step-desc">Because every project gets a clean <code>.local</code> domain with no port, your CORS config is simple. Use the domain below as your allowed origin — no ports, no wildcards needed.</span>
+          <div class="cors-block">
+            <div class="lang">FastAPI / Python</div>
+            <code>
+              <span class="kw">allow_origins</span>=<span class="hl">[</span><span class="str" id="corsOrigin">"https://this.local"</span><span class="hl">]</span>
+            </code>
+          </div>
+          <div class="cors-block" style="margin-top:0.4rem">
+            <div class="lang">Express / Node</div>
+            <code>
+              <span class="kw">cors</span>({ <span class="kw">origin</span>: <span class="str" id="corsOrigin2">"https://this.local"</span> })
+            </code>
+          </div>
+          <div class="cors-block" style="margin-top:0.4rem">
+            <div class="lang">Spring Boot</div>
+            <code>
+              <span class="kw">@CrossOrigin</span>(origins = <span class="str" id="corsOrigin3">"https://this.local"</span>)
+            </code>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">04</span>
+        <div class="step-body">
+          <span class="step-title">API base URL</span>
+          <span class="step-desc">Call your backend directly by domain — no ports in the URL, just like production. Works from any frontend registered in Portlabel Dev.</span>
+          <span class="cmd dev" onclick="copyCmd(this, document.getElementById('apiUrl').innerText)" id="apiUrlCmd">
+            <span id="apiUrl">https://this.local</span>/your-endpoint
+          </span>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">05</span>
+        <div class="step-body">
+          <span class="step-title">Manage all dev projects</span>
+          <span class="step-desc">Open Portlabel Dev to register new projects, view reserved ports, control services, or check CORS info for all registered domains.</span>
+          <span class="cmd dev" onclick="copyCmd(this, 'sudo ./devmode.sh')">sudo ./devmode.sh</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">06</span>
+        <div class="step-body">
+          <span class="step-title">Port range</span>
+          <span class="step-desc">Portlabel Dev auto-assigns ports from the reserved range <strong>30000–39999</strong>. These ports are never used by self-hosted tools, so there are no conflicts.</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- Footer -->
@@ -462,17 +521,47 @@
 </div>
 
 <script>
-  // Show actual domain in the status card
-  const host = window.location.hostname;
-  const parts = host.split('.');
-  const name = parts.slice(0, -1).join('.');
-  const tld  = parts[parts.length - 1];
+  // Inject actual domain everywhere
+  const host   = window.location.hostname;
+  const parts  = host.split('.');
+  const name   = parts.slice(0, -1).join('.');
+  const tld    = parts[parts.length - 1];
+  const full   = host && host !== 'localhost' ? host : 'this.local';
+  const origin = `https://${full}`;
+
   if (host && host !== 'localhost') {
     document.getElementById('domainDisplay').innerHTML =
       `${name}<span class="tld">.${tld}</span>`;
+
+    // CORS snippets
+    ['corsOrigin','corsOrigin2','corsOrigin3'].forEach(id => {
+      document.getElementById(id).textContent = `"${origin}"`;
+    });
+
+    // API URL
+    document.getElementById('apiUrl').textContent = origin;
+
+    // Service commands
+    document.getElementById('startCmd').setAttribute('onclick',
+      `copyCmd(this, 'sudo systemctl start portlabel-${name}')`);
+    document.getElementById('startCmd').textContent =
+      `sudo systemctl start portlabel-${name}`;
+
+    document.getElementById('logCmd').setAttribute('onclick',
+      `copyCmd(this, 'sudo journalctl -u portlabel-${name} -f')`);
+    document.getElementById('logCmd').textContent =
+      `sudo journalctl -u portlabel-${name} -f`;
   }
 
-  // Copy command to clipboard
+  // Tab switching
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Copy to clipboard
   function copyCmd(el, text) {
     navigator.clipboard.writeText(text).then(() => {
       el.classList.add('copied');
