@@ -397,6 +397,20 @@ You can. But you'll also need to manually configure Caddy, write TLS blocks, set
 
 ---
 
+## AI Usage Guidelines
+
+Contributors are welcome to use AI tools to assist in writing or improving code.
+
+However:
+- The contributor is fully responsible for every line they submit — AI-generated or not
+- Do not submit code you do not understand
+- AI-assisted PRs will be reviewed more strictly to catch black-box errors, hidden logic, and untested edge cases
+- Reviewer may ask you to explain specific parts of your submission before merging
+
+Understanding your own code is not optional.
+
+---
+
 ## License
 
 MIT
