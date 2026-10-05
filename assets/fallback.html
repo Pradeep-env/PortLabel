@@ -3,27 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portlabel — Service Offline</title>
+  <title>PortLabel — Service Unreachable</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:        #0a0c0f;
-      --surface:   #111318;
-      --border:    #1e2229;
-      --accent:    #00e5a0;
-      --accent2:   #0066ff;
-      --dev:       #a855f7;
-      --dev-dim:   rgba(168,85,247,0.12);
-      --dev-border:rgba(168,85,247,0.25);
-      --muted:     #3a3f4a;
-      --text:      #e8eaf0;
-      --text-dim:  #6b7280;
-      --mono:      'JetBrains Mono', monospace;
-      --sans:      'Syne', sans-serif;
+      --bg: #0a0c0f;
+      --surface: #111318;
+      --surface-border: #1e2229;
+      --accent: #00e5a0;
+      --accent-dim: rgba(0, 229, 160, 0.1);
+      --danger: #ff4d4d;
+      --danger-dim: rgba(255, 77, 77, 0.12);
+      --text: #e8eaf0;
+      --text-dim: #717786;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Syne', sans-serif;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg);
@@ -34,8 +32,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-      overflow-x: hidden;
+      padding: 2rem 1rem;
+      position: relative;
     }
 
     body::before {
@@ -43,23 +41,10 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 40px 40px;
-      opacity: 0.5;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      top: -200px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 70%);
+        linear-gradient(var(--surface-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--surface-border) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.35;
       pointer-events: none;
       z-index: 0;
     }
@@ -68,506 +53,338 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 700px;
+      max-width: 680px;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
 
     /* ── Header ── */
-    .header {
+    header {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      animation: fadeDown 0.5s ease both;
-    }
-
-    .logo-mark {
-      width: 42px; height: 42px;
-      border: 1.5px solid var(--accent);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; flex-shrink: 0;
-    }
-    .logo-mark::before {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      border: 1px solid rgba(0,229,160,0.3);
-      border-radius: 4px;
-    }
-    .logo-mark svg {
-      width: 18px; height: 18px;
-      stroke: var(--accent); fill: none;
-      stroke-width: 2; stroke-linecap: round;
+      justify-content: space-between;
     }
 
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border: 1.5px solid var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .title {
       font-family: var(--sans);
-      font-size: 1.1rem; font-weight: 800;
-      letter-spacing: 0.05em; color: var(--text);
+      font-size: 1.25rem;
+      letter-spacing: 0.05em;
     }
-    .brand span { color: var(--accent); }
+    .title span { color: var(--accent); }
 
-    .version {
-      font-size: 0.65rem; color: var(--text-dim);
-      border: 1px solid var(--border);
-      padding: 2px 7px; border-radius: 20px;
-      margin-left: auto; letter-spacing: 0.08em;
+    .badge-v1 {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      border: 1px solid var(--surface-border);
+      padding: 3px 8px;
+      border-radius: 20px;
     }
 
-    /* ── Status card ── */
-    .status-card {
+    /* ── Status Card ── */
+    .card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px; padding: 2rem;
-      animation: fadeUp 0.5s 0.1s ease both;
-      position: relative; overflow: hidden;
-    }
-    .status-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.6;
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .status-row {
-      display: flex; align-items: center; gap: 0.75rem;
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--danger), transparent);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--danger);
+      background: var(--danger-dim);
+      border: 1px solid rgba(255, 77, 77, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
       margin-bottom: 1.25rem;
     }
+
     .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #ff4444;
-      box-shadow: 0 0 8px rgba(255,68,68,0.6);
-      animation: pulse-red 2s infinite; flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--danger);
+      box-shadow: 0 0 8px var(--danger);
+      animation: pulse 2s infinite ease-in-out;
     }
-    @keyframes pulse-red {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
-    .status-label {
-      font-size: 0.7rem; letter-spacing: 0.12em;
-      color: var(--text-dim); text-transform: uppercase;
-    }
-    .domain-display {
+
+    .domain-title {
       font-family: var(--sans);
-      font-size: 2rem; font-weight: 800;
-      color: var(--text); line-height: 1.1;
-      margin-bottom: 0.5rem; word-break: break-all;
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+      word-break: break-all;
     }
-    .domain-display .tld { color: var(--accent); }
-    .status-message {
-      font-size: 0.8rem; color: var(--text-dim); line-height: 1.6;
-    }
-    .meta-row {
-      display: flex; gap: 1.5rem;
-      margin-top: 1.5rem; padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-    }
-    .meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
-    .meta-key {
-      font-size: 0.65rem; color: var(--text-dim);
-      text-transform: uppercase; letter-spacing: 0.1em;
-    }
-    .meta-val { font-size: 0.8rem; color: var(--accent); }
+    .domain-title span { color: var(--accent); }
 
-    /* ── Tabs ── */
-    .tabs-wrapper {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      animation: fadeUp 0.5s 0.2s ease both;
-    }
-
-    .tabs-nav {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 0.85rem 1rem;
-      background: none; border: none;
-      font-family: var(--mono);
-      font-size: 0.7rem; letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: color 0.15s, background 0.15s;
-      border-right: 1px solid var(--border);
-      position: relative;
-    }
-    .tab-btn:last-child { border-right: none; }
-    .tab-btn:hover { background: rgba(255,255,255,0.02); color: var(--text); }
-
-    .tab-btn.active {
-      color: var(--accent);
-      background: rgba(0,229,160,0.04);
-    }
-    .tab-btn.active::after {
-      content: '';
-      position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
-      background: var(--accent);
-    }
-
-    .tab-btn.dev-tab.active {
-      color: var(--dev);
-      background: var(--dev-dim);
-    }
-    .tab-btn.dev-tab.active::after { background: var(--dev); }
-    .tab-btn.dev-tab:hover { color: var(--dev); }
-
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
-
-    /* ── Steps (shared) ── */
-    .step {
-      display: flex; gap: 1rem;
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-    }
-    .step:last-child { border-bottom: none; }
-    .step:hover { background: rgba(255,255,255,0.02); }
-
-    .step-num {
-      font-size: 0.65rem; color: var(--accent);
-      font-weight: 700; width: 18px; flex-shrink: 0; padding-top: 2px;
-    }
-    .dev-tab-pane .step-num { color: var(--dev); }
-
-    .step-body { display: flex; flex-direction: column; gap: 0.35rem; }
-    .step-title { font-size: 0.8rem; color: var(--text); font-weight: 600; }
-    .step-desc  { font-size: 0.72rem; color: var(--text-dim); line-height: 1.5; }
-
-    .cmd {
-      display: inline-block;
-      background: rgba(0,229,160,0.08);
-      border: 1px solid rgba(0,229,160,0.2);
-      color: var(--accent);
-      padding: 3px 8px; border-radius: 4px;
-      font-size: 0.72rem; margin-top: 0.25rem;
-      cursor: pointer; transition: background 0.15s;
-      position: relative;
-    }
-    .cmd:hover { background: rgba(0,229,160,0.15); }
-    .cmd.dev {
-      background: var(--dev-dim);
-      border-color: var(--dev-border);
-      color: var(--dev);
-    }
-    .cmd.dev:hover { background: rgba(168,85,247,0.2); }
-
-    .cmd.copied::after {
-      content: 'copied!';
-      position: absolute; right: -52px; top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.65rem; color: var(--accent);
-      animation: fadeOut 1.2s forwards;
-    }
-    .cmd.dev.copied::after { color: var(--dev); }
-
-    @keyframes fadeOut {
-      0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; }
-    }
-
-    /* ── Dev section specific ── */
-    .cors-block {
-      margin: 0.5rem 0 0;
-      background: rgba(168,85,247,0.05);
-      border: 1px solid var(--dev-border);
-      border-radius: 6px;
-      padding: 0.6rem 0.9rem;
-    }
-
-    .cors-block .lang {
-      font-size: 0.6rem;
-      color: var(--dev);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    .cors-block code {
-      font-size: 0.72rem;
+    .desc {
+      font-size: 0.85rem;
       color: var(--text-dim);
       line-height: 1.6;
-      display: block;
     }
 
-    .cors-block code .hl { color: var(--text); }
-    .cors-block code .kw { color: var(--dev); }
-    .cors-block code .str { color: var(--accent); }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.6rem;
-      padding: 1px 6px;
-      border-radius: 3px;
-      background: var(--dev-dim);
-      border: 1px solid var(--dev-border);
-      color: var(--dev);
-      letter-spacing: 0.06em;
-      margin-left: 0.4rem;
-      vertical-align: middle;
+    /* ── Info & Retry Row ── */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--surface-border);
     }
 
-    /* ── Footer ── */
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .meta-key {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+
+    .meta-val {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Action Box ── */
+    .steps-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .step-idx {
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-weight: 700;
+    }
+
+    .step-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+    }
+
+    .step-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .step-text {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .cmd-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0d0f14;
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--accent);
+      cursor: pointer;
+      width: fit-content;
+      margin-top: 0.35rem;
+      transition: all 0.15s;
+    }
+
+    .cmd-box:hover {
+      border-color: var(--accent);
+      background: rgba(0, 229, 160, 0.05);
+    }
+
     .footer {
-      text-align: center; font-size: 0.65rem;
-      color: var(--muted); letter-spacing: 0.08em;
-      animation: fadeUp 0.5s 0.3s ease both;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-dim);
     }
     .footer a {
-      color: var(--text-dim); text-decoration: none;
-      border-bottom: 1px solid var(--border); transition: color 0.15s;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--text-dim);
     }
-    .footer a:hover { color: var(--accent); }
-
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .footer a:hover { color: var(--accent); border-color: var(--accent); }
   </style>
 </head>
 <body>
 
 <div class="container">
-
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24">
-        <rect x="3" y="3" width="7" height="7" rx="1"/>
-        <rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/>
-        <circle cx="17.5" cy="17.5" r="3.5"/>
-      </svg>
-    </div>
-    <span class="brand">Port<span>label</span></span>
-    <span class="version">v1.0</span>
-  </div>
-
-  <!-- Status card -->
-  <div class="status-card">
-    <div class="status-row">
-      <div class="dot"></div>
-      <span class="status-label">Service Unreachable</span>
-    </div>
-    <div class="domain-display" id="domainDisplay">
-      this<span class="tld">.local</span>
-    </div>
-    <p class="status-message">
-      This domain is registered with Portlabel but no service is currently running on the assigned port.
-      Start your application and this page will be replaced automatically.
-    </p>
-    <div class="meta-row">
-      <div class="meta-item">
-        <span class="meta-key">Managed by</span>
-        <span class="meta-val">Portlabel</span>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <circle cx="17.5" cy="17.5" r="3.5"/>
+        </svg>
       </div>
+      <div class="title">Port<span>label</span></div>
+    </div>
+    <span class="badge-v1">v1.0</span>
+  </header>
+
+  <div class="card">
+    <div class="status-badge">
+      <div class="dot"></div>
+      Target Service Offline
+    </div>
+    <div class="domain-title" id="domainTitle">
+      app<span>.local</span>
+    </div>
+    <p class="desc">
+      The domain route is mapped and actively proxied by PortLabel, but the upstream application is not responding on its assigned local port.
+    </p>
+
+    <div class="meta-grid">
       <div class="meta-item">
-        <span class="meta-key">Proxy</span>
+        <span class="meta-key">Proxy Engine</span>
         <span class="meta-val">Caddy</span>
       </div>
       <div class="meta-item">
-        <span class="meta-key">TLS</span>
-        <span class="meta-val">internal</span>
+        <span class="meta-key">Internal TLS</span>
+        <span class="meta-val">Active (Local CA)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-key">Auto Reconnect</span>
+        <span class="meta-val" id="reconnectTimer">Checking in 5s</span>
       </div>
     </div>
   </div>
 
-  <!-- Tabbed instructions -->
-  <div class="tabs-wrapper">
-    <div class="tabs-nav">
-      <button class="tab-btn active"     onclick="switchTab('general', this)">Quick Reference</button>
-      <button class="tab-btn dev-tab"    onclick="switchTab('dev', this)">Developer <span class="badge">devmode</span></button>
+  <div class="steps-card">
+    <div class="step">
+      <span class="step-idx">01</span>
+      <div class="step-content">
+        <span class="step-label">Start the Backend Application</span>
+        <span class="step-text">Ensure your development server, container, or background daemon is running on its designated localhost port.</span>
+      </div>
     </div>
 
-    <!-- General tab -->
-    <div class="tab-pane active" id="tab-general">
-
-      <div class="step">
-        <span class="step-num">01</span>
-        <div class="step-body">
-          <span class="step-title">Start your service</span>
-          <span class="step-desc">Make sure the application assigned to this domain is running on its port. Portlabel doesn't manage your processes — it only handles the routing.</span>
+    <div class="step">
+      <span class="step-idx">02</span>
+      <div class="step-content">
+        <span class="step-label">Manage via CLI</span>
+        <span class="step-text">Check your mapping configurations, update ports, or toggle services directly from terminal:</span>
+        <div class="cmd-box" onclick="copyText('sudo portlabel list', this)">
+          <span>sudo portlabel list</span>
         </div>
       </div>
-
-      <div class="step">
-        <span class="step-num">02</span>
-        <div class="step-body">
-          <span class="step-title">Check registered domains</span>
-          <span class="step-desc">Open Portlabel and use List to see all domains and their current status.</span>
-          <span class="cmd" onclick="copyCmd(this, 'sudo portlabel')">sudo portlabel</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">03</span>
-        <div class="step-body">
-          <span class="step-title">Toggle a domain on or off</span>
-          <span class="step-desc">Use option 5 in the menu to enable or disable a domain without deleting it. Disabled domains show this page.</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">04</span>
-        <div class="step-body">
-          <span class="step-title">First visit shows a security warning</span>
-          <span class="step-desc">Portlabel uses Caddy's internal TLS. On first visit Chrome will warn you — click Advanced → Proceed. You won't see it again for this domain.</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">05</span>
-        <div class="step-body">
-          <span class="step-title">Chrome not resolving .local domains?</span>
-          <span class="step-desc">Disable Chrome's async DNS resolver to ensure it reads your hosts file correctly.</span>
-          <span class="cmd" onclick="copyCmd(this, 'chrome://flags/#enable-async-dns')">chrome://flags/#enable-async-dns</span>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Developer tab -->
-    <div class="tab-pane dev-tab-pane" id="tab-dev">
-
-      <div class="step">
-        <span class="step-num">01</span>
-        <div class="step-body">
-          <span class="step-title">Start your dev service</span>
-          <span class="step-desc">If you created a systemd service with Portlabel Dev, start it with the command below. Replace <em>name</em> with your project name.</span>
-          <span class="cmd dev" onclick="copyCmd(this, 'sudo systemctl start portlabel-name')" id="startCmd">sudo systemctl start portlabel-name</span>
+    <div class="step">
+      <span class="step-idx">03</span>
+      <div class="step-content">
+        <span class="step-label">Open Web Dashboard</span>
+        <span class="step-text">Monitor live port listener statuses and routes visually on the dashboard:</span>
+        <div class="cmd-box" onclick="window.open('https://portlabel.local', '_blank')">
+          <span>https://portlabel.local ↗</span>
         </div>
       </div>
-
-      <div class="step">
-        <span class="step-num">02</span>
-        <div class="step-body">
-          <span class="step-title">View service logs</span>
-          <span class="step-desc">Check what your service is outputting — useful when the port is up but the app isn't responding correctly.</span>
-          <span class="cmd dev" onclick="copyCmd(this, 'sudo journalctl -u portlabel-name -f')" id="logCmd">sudo journalctl -u portlabel-name -f</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">03</span>
-        <div class="step-body">
-          <span class="step-title">CORS — allow origin</span>
-          <span class="step-desc">Because every project gets a clean <code>.local</code> domain with no port, your CORS config is simple. Use the domain below as your allowed origin — no ports, no wildcards needed.</span>
-          <div class="cors-block">
-            <div class="lang">FastAPI / Python</div>
-            <code>
-              <span class="kw">allow_origins</span>=<span class="hl">[</span><span class="str" id="corsOrigin">"https://this.local"</span><span class="hl">]</span>
-            </code>
-          </div>
-          <div class="cors-block" style="margin-top:0.4rem">
-            <div class="lang">Express / Node</div>
-            <code>
-              <span class="kw">cors</span>({ <span class="kw">origin</span>: <span class="str" id="corsOrigin2">"https://this.local"</span> })
-            </code>
-          </div>
-          <div class="cors-block" style="margin-top:0.4rem">
-            <div class="lang">Spring Boot</div>
-            <code>
-              <span class="kw">@CrossOrigin</span>(origins = <span class="str" id="corsOrigin3">"https://this.local"</span>)
-            </code>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">04</span>
-        <div class="step-body">
-          <span class="step-title">API base URL</span>
-          <span class="step-desc">Call your backend directly by domain — no ports in the URL, just like production. Works from any frontend registered in Portlabel Dev.</span>
-          <span class="cmd dev" onclick="copyCmd(this, document.getElementById('apiUrl').innerText)" id="apiUrlCmd">
-            <span id="apiUrl">https://this.local</span>/your-endpoint
-          </span>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">05</span>
-        <div class="step-body">
-          <span class="step-title">Manage all dev projects</span>
-          <span class="step-desc">Open Portlabel Dev to register new projects, view reserved ports, control services, or check CORS info for all registered domains.</span>
-          <span class="cmd dev" onclick="copyCmd(this, 'sudo ./devmode.sh')">sudo ./devmode.sh</span>
-        </div>
-      </div>
-
-      <div class="step">
-        <span class="step-num">06</span>
-        <div class="step-body">
-          <span class="step-title">Port range</span>
-          <span class="step-desc">Portlabel Dev auto-assigns ports from the reserved range <strong>30000–39999</strong>. These ports are never used by self-hosted tools, so there are no conflicts.</span>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="footer">
-    PORTLABEL — LOCAL DOMAIN MANAGER &nbsp;·&nbsp;
-    <a href="https://github.com/yourusername/portlabel" target="_blank">github</a>
+    Manage local host routes with <a href="https://github.com/Pradeep-env/PortLabel" target="_blank">PortLabel</a>
   </div>
-
 </div>
 
 <script>
-  // Inject actual domain everywhere
-  const host   = window.location.hostname;
-  const parts  = host.split('.');
-  const name   = parts.slice(0, -1).join('.');
-  const tld    = parts[parts.length - 1];
-  const full   = host && host !== 'localhost' ? host : 'this.local';
-  const origin = `https://${full}`;
+  const host = window.location.hostname || 'app.local';
+  const parts = host.split('.');
+  const name = parts[0] || 'app';
+  const tld = parts.length > 1 ? '.' + parts.slice(1).join('.') : '.local';
 
-  if (host && host !== 'localhost') {
-    document.getElementById('domainDisplay').innerHTML =
-      `${name}<span class="tld">.${tld}</span>`;
+  document.getElementById('domainTitle').innerHTML = `${name}<span>${tld}</span>`;
 
-    // CORS snippets
-    ['corsOrigin','corsOrigin2','corsOrigin3'].forEach(id => {
-      document.getElementById(id).textContent = `"${origin}"`;
-    });
-
-    // API URL
-    document.getElementById('apiUrl').textContent = origin;
-
-    // Service commands
-    document.getElementById('startCmd').setAttribute('onclick',
-      `copyCmd(this, 'sudo systemctl start portlabel-${name}')`);
-    document.getElementById('startCmd').textContent =
-      `sudo systemctl start portlabel-${name}`;
-
-    document.getElementById('logCmd').setAttribute('onclick',
-      `copyCmd(this, 'sudo journalctl -u portlabel-${name} -f')`);
-    document.getElementById('logCmd').textContent =
-      `sudo journalctl -u portlabel-${name} -f`;
-  }
-
-  // Tab switching
-  function switchTab(tab, btn) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    btn.classList.add('active');
-  }
-
-  // Copy to clipboard
-  function copyCmd(el, text) {
+  function copyText(text, el) {
     navigator.clipboard.writeText(text).then(() => {
-      el.classList.add('copied');
-      setTimeout(() => el.classList.remove('copied'), 1400);
+      const original = el.innerHTML;
+      el.innerHTML = '<span>Copied!</span>';
+      setTimeout(() => { el.innerHTML = original; }, 1500);
     });
   }
+
+  let countdown = 5;
+  const timerEl = document.getElementById('reconnectTimer');
+  setInterval(() => {
+    countdown--;
+    if (countdown <= 0) {
+      window.location.reload();
+    } else {
+      timerEl.textContent = `Checking in ${countdown}s`;
+    }
+  }, 1000);
 </script>
 </body>
 </html>
